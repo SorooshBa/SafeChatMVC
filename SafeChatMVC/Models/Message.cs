@@ -45,5 +45,7 @@ namespace SafeChatMVC.Models
         public string? PicUrl { get; set; }
         [NotMapped]
         public string? DecryptedText { get; set; }
+
+        public string? IPAddress { get; set; }
     }
 }

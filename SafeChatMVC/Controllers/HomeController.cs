@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using SafeChatMVC.Models;
 using System.Diagnostics;
-
+using System.Web;
 namespace SafeChatMVC.Controllers
 {
     public class HomeController : Controller
-	{
-		private readonly ChatContext _context;
+    {
+        private readonly ChatContext _context;
         public HomeController(ChatContext _context)
         {
             this._context = _context;
@@ -14,29 +14,29 @@ namespace SafeChatMVC.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-			
+
             return View();
         }
         [HttpPost]
-		public IActionResult Index(Message message)
-		{
+        public IActionResult Index(Message message)
+        {
             ViewData["Success"] = null;
             if (ModelState.IsValid)
-			{
-				if(message.PicUrl==null)
-				{
-					message.PicUrl = "/pictuures/nopic.jpg";
+            {
+                if (message.PicUrl == null)
+                {
+                    message.PicUrl = "/pictuures/nopic.jpg";
 
                 }
-				message.Text = Aes_256.Encrypt(message.Text, message.Password);
-				message.Sender=Aes_256.Encrypt(message.Sender,message.Password);
-				_context.Messages.Add(message);
-				_context.SaveChanges();
-				ViewData["Success"] = "Successfully sent";
+                message.Text = Aes_256.Encrypt(message.Text, message.Password);
+                message.Sender = Aes_256.Encrypt(message.Sender, message.Password);
+                _context.Messages.Add(message);
+                _context.SaveChanges();
+                ViewData["Success"] = "Successfully sent";
 
             }
-			return View(message);
-		}
+            return View(message);
+        }
         public IActionResult ChatroomSend(IndexModel model)
         {
             ViewData["Success"] = null;
@@ -54,42 +54,51 @@ namespace SafeChatMVC.Controllers
                 ViewData["Success"] = "Successfully sent";
 
             }
-            return(View("Chatroom",new IndexModel()));
+            return (View("Chatroom", new IndexModel()));
         }
 
         public IActionResult Chatroom()
-		{
-			return View(new IndexModel());
-		}
-		[HttpPost]
+        {
+            return View(new IndexModel());
+        }
+        [HttpPost]
         public IActionResult Chatroom(Message message)
         {
             var imp = new IndexModel();
-            imp.messages = _context.Messages.Where(x=>x.ChatRoomName==message.ChatRoomName).OrderByDescending(x=>x.Id).ToList();
-			foreach (var item in imp.messages)
-			{
-				try
-				{
-					item.Text = Aes_256.Decrypt(item.Text, message.Password);
-					item.Sender=Aes_256.Decrypt(item.Sender,message.Password);
-				}
-				catch 
-				{
+            imp.messages = _context.Messages.Where(x => x.ChatRoomName == message.ChatRoomName).OrderByDescending(x => x.Id).ToList();
+            foreach (var item in imp.messages)
+            {
+                try
+                {
+                    item.Text = Aes_256.Decrypt(item.Text, message.Password);
+                    item.Sender = Aes_256.Decrypt(item.Sender, message.Password);
+                }
+                catch
+                {
 
-				}
-			}
+                }
+            }
             return View(imp);
         }
 
         public IActionResult Chat()
         {
+           
             return View(new IndexModel());
         }
         [HttpPost]
         public IActionResult Chat(Message message)
         {
             var imp = new IndexModel();
-            imp.messages = _context.Messages.Where(x => x.ChatRoomName == message.ChatRoomName).ToList();
+            var chatrname = "";
+            try
+            {
+                chatrname = Aes_256.Encrypt(message.ChatRoomName, message.Password);
+            }
+            catch {
+
+            }
+            imp.messages = _context.Messages.Where(x => x.ChatRoomName == chatrname).ToList();
             foreach (var item in imp.messages)
             {
                 try
@@ -117,17 +126,23 @@ namespace SafeChatMVC.Controllers
                 }
                 model.message.Text = Aes_256.Encrypt(model.message.Text, model.message.Password);
                 model.message.Sender = Aes_256.Encrypt(model.message.Sender, model.message.Password);
+                model.message.ChatRoomName = Aes_256.Encrypt(model.message.ChatRoomName, model.message.Password);
+                model.message.IPAddress = GetIp();
                 _context.Messages.Add(model.message);
                 _context.SaveChanges();
                 ViewData["Success"] = "Successfully sent";
 
             }
-            return View("Chat",new IndexModel());
+            return View("Chat", new IndexModel());
+        }
+        public string GetIp()
+        {
+            return HttpContext.Connection.RemoteIpAddress.ToString();
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-		public IActionResult Error()
-		{
-			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-		}
-	}
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+    }
 }
