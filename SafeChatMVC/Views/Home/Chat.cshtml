@@ -1,0 +1,140 @@
+﻿@model IndexModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SASafeChat</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="~/css/style.css">
+
+</head>
+<body>
+    <section class="msger">
+        <header class="msger-header">
+            <div class="msger-header-title">
+                <i class="fas fa-comment-alt"></i>SASafeChat
+            </div>
+            <div class="msger-header-options">
+                <span><i class="fas fa-cog"></i></span>
+            </div>
+        </header>
+
+        <main class="msger-chat">
+            @foreach (var item in Model.messages)
+            {
+                <div class="msg left-msg">
+                    <div class="msg-img"
+                         style="background-image: url(@item.PicUrl)"></div>
+
+                    <div class="msg-bubble">
+                        <div class="msg-info">
+                            <div class="msg-info-name">@item.Sender</div>
+                            <div class="msg-info-time">@item.Date</div>
+                        </div>
+
+                        <div class="msg-text">
+                            @item.Text
+
+                        </div>
+                    </div>
+                </div>
+            }
+            @*  ------------------ *@
+            <div class="msg right-msg">
+                <form method="post" action="@Url.Action("SendChat")">
+                    <div class="msg-bubble">
+                        <label class="p-0" asp-for="message.Sender"></label>
+                        <input class="p-0" size="50" asp-for="message.Sender" type="text" />
+                        <span asp-validation-for="message.Sender" class="alert-danger"></span>
+                        <br>
+                        <label class="p-0" asp-for="message.Password"></label>
+                        <input class="p-0" size="50" asp-for="message.Password" type="password" />
+                        <span asp-validation-for="message.Password" class="alert-danger"></span>
+                        <br>
+                        <label class="p-0" asp-for="message.ChatRoomName"></label>
+                        <input class="p-0" size="50" asp-for="message.ChatRoomName" type="text" />
+                        <span asp-validation-for="message.ChatRoomName" class="alert-danger"></span>
+                        <br>
+                        <label class="p-0" asp-for="message.Text"></label>
+                        <textarea class="p-0" rows="8" cols="50" asp-for="message.Text" type="text"></textarea>
+                        <span asp-validation-for="message.Text" class="alert-danger"></span>
+                        <br>
+                        <button class="msger-send-btn" type="submit">Send</button>
+                        <br />
+                        <label class="p-0" asp-for="message.PicUrl"></label>
+                        <input class="p-0" size="50" asp-for="message.PicUrl" id="picurl" type="text" />
+                        <img width="50px" src="~/pictuures/nopic.jpg" id="pic" />
+
+                        @* --------------------- *@
+                        
+                        <table class="table table-bordered">
+                            @for (int i = 1; i <= 9; i += 3)
+                            {
+                                <tr>
+                                    <td>
+                                        <img width="50px" id="@(i)" src="~/pictuures/@(i).jpg" />
+                                        <script>
+                                            var a@(i) = document.getElementById("@(i)");
+                                                                    a@(i).addEventListener("click", myFunction@(i));
+                                            function myFunction@(i)() {
+                                                document.getElementById("picurl").value = a@(i).src;
+                                                var b = document.getElementById("pic");
+                                                b.src = a@(i).src;
+                                            }
+                                        </script>
+                                    </td>
+                                    <td>
+                                        <img width="50px" id="@(i+1)" src="~/pictuures/@(i+1).jpg" />
+                                        <script>
+                                            var a@(i + 1) = document.getElementById("@(i + 1)");
+                                                                    a@(i + 1).addEventListener("click", myFunction@(i + 1));
+                                            function myFunction@(i + 1)() {
+                                                document.getElementById("picurl").value = a@(i + 1).src;
+                                                var b = document.getElementById("pic");
+                                                b.src = a@(i + 1).src;
+                                            }
+                                        </script>
+                                    </td>
+                                    <td>
+                                        <img width="50px" id="@(i+2)" src="~/pictuures/@(i+2).jpg" />
+                                        <script>
+                                            var a@(i + 2) = document.getElementById("@(i + 2)");
+                                                                    a@(i + 2).addEventListener("click", myFunction@(i + 2));
+                                            function myFunction@(i + 2)() {
+                                                document.getElementById("picurl").value = a@(i + 2).src;
+                                                var b = document.getElementById("pic");
+                                                b.src = a@(i + 2).src;
+                                            }
+                                        </script>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                        
+                    </div>
+                </form>
+            </div>
+
+
+        </main>
+
+
+
+        <form class="msger-inputarea" action="@Url.Action("Chat")" method="post">
+            <input type="password" asp-for="@Model.message.Password" class="msger-input p-1" placeholder="Password">
+            <input type="text" asp-for="@Model.message.ChatRoomName" class="msger-input" placeholder="ChatRoomName">
+            <button type="submit" class="msger-send-btn">Enter Room</button>
+        </form>
+    </section>
+
+
+
+</body>
+</html>
+
+

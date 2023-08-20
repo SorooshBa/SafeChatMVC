@@ -1,0 +1,187 @@
+﻿@model IndexModel
+@{
+    ViewData["Title"] = "ChatRoom";
+}
+<div class="row">
+    <div class="col-6">
+        <form method="post" action="@Url.Action("ChatroomSend")" class="p-2">
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <label class="p-0" asp-for="message.Sender"></label>
+                        </td>
+                        <td>
+                            <input class="p-0" size="50" asp-for="message.Sender" type="text" />
+                            <span asp-validation-for="message.Sender" class="alert-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="p-0" asp-for="message.Password"></label>
+                        </td>
+                        <td>
+                            <input class="p-0" size="50" asp-for="message.Password" type="text" />
+                            <span asp-validation-for="message.Password" class="alert-danger"></span>
+                        </td>
+                        <td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="p-0" asp-for="message.ChatRoomName"></label>
+                        </td>
+                        <td>
+                            <input class="p-0" size="50" asp-for="message.ChatRoomName" type="text" />
+                            <span asp-validation-for="message.ChatRoomName" class="alert-danger"></span>
+                        </td>
+                        <td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="p-0" asp-for="message.Text"></label>
+                        </td>
+                        <td>
+                            <textarea class="p-0" rows="8" cols="50" asp-for="message.Text" type="text"></textarea>
+                            <span asp-validation-for="message.Text" class="alert-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="p-0" asp-for="message.PicUrl"></label>
+                        </td>
+                        <td>
+                            <input class="p-0" size="50" asp-for="message.PicUrl" id="picurl" type="text" />
+                        </td>
+                        <td>
+                             <img width="50px" src="~/pictuures/nopic.jpg" id="pic" />
+                            
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td></td>
+                        <td>
+                            <button class="btn-primary" type="submit">Send</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+    
+    <div class="col-6">
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <table class="table table-bordered">
+            @for (int i = 1; i <= 9; i += 3)
+            {
+                <tr>
+                    <td>
+                        <img width="50px" id="@(i)" src="~/pictuures/@(i).jpg" />
+                        <script>
+                            var a@(i) = document.getElementById("@(i)");
+                                                    a@(i).addEventListener("click", myFunction@(i));
+                            function myFunction@(i)() {
+                                document.getElementById("picurl").value = a@(i).src;
+                                var b = document.getElementById("pic");
+                                b.src = a@(i).src;
+                            }
+                        </script>
+                    </td>
+                    <td>
+                        <img width="50px" id="@(i+1)" src="~/pictuures/@(i+1).jpg" />
+                        <script>
+                            var a@(i + 1) = document.getElementById("@(i + 1)");
+                                                    a@(i + 1).addEventListener("click", myFunction@(i + 1));
+                            function myFunction@(i + 1)() {
+                                document.getElementById("picurl").value = a@(i + 1).src;
+                                var b = document.getElementById("pic");
+                                b.src = a@(i + 1).src;
+                            }
+                        </script>
+                    </td>
+                    <td>
+                        <img width="50px" id="@(i+2)" src="~/pictuures/@(i+2).jpg" />
+                        <script>
+                            var a@(i + 2) = document.getElementById("@(i + 2)");
+                                                    a@(i + 2).addEventListener("click", myFunction@(i + 2));
+                            function myFunction@(i + 2)() {
+                                document.getElementById("picurl").value = a@(i + 2).src;
+                                var b = document.getElementById("pic");
+                                b.src = a@(i + 2).src;
+                            }
+                        </script>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+
+</div>
+<div>
+    <form method="post" action="@Url.Action("Chatroom")" class="p-2">
+    <table>
+        <tbody>
+            
+            <tr>
+                <td>
+                    <label class="p-0" asp-for="message.Password"></label>
+                </td>
+                <td>
+                    <input class="p-0" asp-for="message.Password" type="text" />
+                    <span asp-validation-for="message.Password" class="alert-danger"></span>
+                </td>
+                <td>
+            </tr>
+            <tr>
+                <td>
+                    <label class="p-0" asp-for="message.ChatRoomName"></label>
+                </td>
+                <td>
+                    <input class="p-0" asp-for="message.ChatRoomName" type="text" />
+                    <span asp-validation-for="message.ChatRoomName" class="alert-danger"></span>
+                </td>
+                <td>
+            </tr>
+            <tr>
+                <td>
+                    <button class=" btn-primary" type="submit">Enter</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    </form>
+</div>
+<div class="p-1">
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <td width="10%">ChatRoom</td>
+                <td width="10%">Pic</td>
+                <td width="10%">Sender</td>
+                <td>Message</td>
+                <td width="10%">Date</td>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.messages)
+            {
+                <tr>
+                    <td>@item.ChatRoomName</td>
+                    <td><img width="50px" src="@item.PicUrl"/></td>
+                    <td>@item.Sender</td>
+                    <td><span>@item.Text</span></td>
+                    <td>@item.Date</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+

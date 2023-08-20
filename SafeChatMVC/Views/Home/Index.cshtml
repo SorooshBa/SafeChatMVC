@@ -1,0 +1,130 @@
+﻿@model Message
+@{
+    ViewData["Title"] = "Send Message";
+}
+<div class="p-2">
+    @if (ViewData["Success"] != null)
+    {
+        <span class="bg-light text-success">@ViewData["Success"]</span>
+    }
+</div>
+<div class="row">
+<div class="col-6">
+    <form method="post" class="p-2">
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <label class="p-0" asp-for="Sender"></label>
+                    </td>
+                    <td>
+                        <input class="p-0" size="50" asp-for="Sender" type="text" />
+                        <span asp-validation-for="Sender" class="alert-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="p-0" asp-for="Password"></label>
+                    </td>
+                    <td>
+                            <input class="p-0" size="50" asp-for="Password" type="text" />
+                        <span asp-validation-for="Password" class="alert-danger"></span>
+                    </td>
+                    <td>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="p-0" asp-for="ChatRoomName"></label>
+                    </td>
+                    <td>
+                            <input class="p-0" size="50" asp-for="ChatRoomName" type="text" />
+                        <span asp-validation-for="ChatRoomName" class="alert-danger"></span>
+                    </td>
+                    <td>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="p-0" asp-for="Text"></label>
+                    </td>
+                    <td>
+                        <textarea class="p-0" rows="8" cols="50" asp-for="Text" type="text"></textarea>
+                        <span asp-validation-for="Text" class="alert-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="p-0" asp-for="PicUrl"></label>
+                    </td>
+                    <td>
+                            <input class="p-0" size="50" asp-for="PicUrl" id="picurl" type="text" />
+                    </td>
+                    <td>
+                        @if (Model!=null)
+                        {
+                            <img width="50px" src="@Model.PicUrl" id="pic" />
+                        }
+                        @if(Model==null){          
+                        <img width="50px" src="~/pictuures/nopic.jpg" id="pic"/>
+                        }
+                    </td>
+                   
+                </tr>
+                
+                <tr>
+                       
+                    <td></td>
+                    <td> 
+                            <button  class="btn-primary" type="submit">Send</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+    </div>
+    <div class="col-6">
+        <table class="table table-bordered">
+        @for (int i = 1; i <= 9; i += 3)
+        {
+            <tr>
+                <td>
+                    <img width="50px" id="@(i)" src="~/pictuures/@(i).jpg" />
+                    <script>
+                        var a@(i) = document.getElementById("@(i)");
+                        a@(i).addEventListener("click", myFunction@(i));
+                        function myFunction@(i)() {
+                            document.getElementById("picurl").value = a@(i).src;
+                            var b = document.getElementById("pic");
+                            b.src = a@(i).src;
+                        }
+                    </script>
+                </td>
+                <td>
+                    <img width="50px" id="@(i+1)" src="~/pictuures/@(i+1).jpg" />
+                    <script>
+                        var a@(i + 1) = document.getElementById("@(i + 1)");
+                        a@(i + 1).addEventListener("click", myFunction@(i + 1));
+                        function myFunction@(i + 1)() {
+                            document.getElementById("picurl").value = a@(i + 1).src;
+                            var b = document.getElementById("pic");
+                            b.src = a@(i+1).src;
+                        }
+                    </script>
+                </td>
+                <td>
+                    <img width="50px" id="@(i+2)" src="~/pictuures/@(i+2).jpg" />
+                    <script>
+                        var a@(i + 2) = document.getElementById("@(i + 2)");
+                        a@(i + 2).addEventListener("click", myFunction@(i + 2));
+                        function myFunction@(i + 2)() {
+                            document.getElementById("picurl").value = a@(i + 2).src;
+                            var b = document.getElementById("pic");
+                            b.src = a@(i+2).src;
+                        }
+                    </script>
+                </td>
+            </tr>
+        }
+    </table>
+    </div>
+
+</div>
