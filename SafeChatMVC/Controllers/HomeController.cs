@@ -94,7 +94,7 @@ namespace SafeChatMVC.Controllers
             {
                 try
                 {
-                    item.Text = Aes_256.Decrypt(item.Text, message.Password);
+                    item.DecryptedText = Aes_256.Decrypt(item.Text, message.Password);
                     item.Sender = Aes_256.Decrypt(item.Sender, message.Password);
                 }
                 catch

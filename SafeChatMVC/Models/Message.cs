@@ -43,5 +43,7 @@ namespace SafeChatMVC.Models
         public DateTime Date { get; set; }
         [DisplayName("Picture Url")]
         public string? PicUrl { get; set; }
+        [NotMapped]
+        public string? DecryptedText { get; set; }
     }
 }
